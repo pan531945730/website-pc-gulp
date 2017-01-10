@@ -1,0 +1,22 @@
+rev 默认情况，代码构建出来是style-1d87bebe.css这咱形式，改成style.css?v=1d87bebe这种形式，所以要改源代码，如下：
+
+	1. 打开 node_modules\gulp-rev\index.js
+第133行 manifest[originalFile] = revisionedFile; 
+更新为: manifest[originalFile] = originalFile + '?v=' + file.revHash;
+
+	2. 打开 nodemodules\gulp-rev\nodemodules\rev-path\index.js
+10行 return filename + '-' + hash + ext; 
+更新为: return filename + ext;
+
+	3. 打开 node_modules\gulp-rev-collector\index.js
+31行 if ( path.basename(json[key]).replace(new RegExp( opts.revSuffix ), '' ) !== path.basename(key) ) { 
+更新为: if ( path.basename(json[key]).split('?')[0] !== path.basename(key) ) {
+
+
+工具使用：
+
+1、配置项目路径（path是输入目录，dist是输出目录）
+
+2、gulp构建测试环境代码，gulp watch监听
+
+3、gulp web/wap 构建正式环境代码
